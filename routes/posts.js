@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const PostModel = require('../models/posts');
-
+const CommentModel = require('../models/comments');
 const checkLogin = require('../middlewares/check').checkLogin;
 
 // GET /posts , all blog article from users
@@ -63,17 +63,20 @@ router.get('/:postId', function (req, res, next) {
   const postId = req.params.postId;
 
   Promise.all([
-    PostModel.getPostById(postId), // get post id
+    PostModel.getPostById(postId), // get post od
+    CommentModel.getComments(postId), // get all comments from posts
     PostModel.incPv(postId)// post view + 1
   ])
     .then(function (result) {
       const post = result[0];
+      const comments = result[1];
       if (!post) {
-        throw new Error('Article Not Found');
+        throw new Error('Article not found');
       }
 
       res.render('post', {
-        post: post
+        post: post,
+        comments: comments
       });
     })
     .catch(next);
@@ -134,7 +137,7 @@ router.post('/:postId/edit', checkLogin, function (req, res, next) {
           res.redirect(`/posts/${postId}`);
         })
         .catch(next);
-    })
+    });
 });
 
 // GET /posts/:postId/remove , remove article page
@@ -157,7 +160,7 @@ router.get('/:postId/remove', checkLogin, function (req, res, next) {
           res.redirect('/posts');
         })
         .catch(next);
-    })
+    });
 });
 
 module.exports = router;
