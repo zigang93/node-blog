@@ -4,7 +4,7 @@ module.exports = {
   // Sign Up A User
   create: function create (user) {
     return User.create(user).exec();
-  }
+  },
 
   // Get user detail from username
   getUserByName: function getUserByName (name) {
