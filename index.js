@@ -29,8 +29,15 @@ app.use(session({
     url: config.mongodb // mongodb address
   })
 }));
+
 // flash middleware for notification
 app.use(flash());
+
+// Handle form and upload middleware
+app.use(require('express-formidable')({
+  uploadDir: path.join(__dirname, 'public/img'), // upload folder path
+  keepExtensions: true
+}));
 
 // setup app locals variable
 app.locals.blog = {
