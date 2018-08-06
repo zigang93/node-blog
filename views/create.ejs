@@ -1,0 +1,28 @@
+<%- include('header') %>
+
+<div class="ui grid">
+  <div class="four wide column">
+    <a class="avatar avatar-link"
+       href="/posts?author=<%= user._id %>"
+       data-title="<%= user.name %> | <%= ({m: 'Male', f: 'Female', x: 'Secret'})[user.gender] %>"
+       data-content="<%= user.bio %>">
+      <img class="avatar" src="/img/<%= user.avatar %>">
+    </a>
+  </div>
+
+  <div class="eight wide column">
+    <form class="ui form segment" method="post">
+      <div class="field required">
+        <label>Title</label>
+        <input type="text" name="title">
+      </div>
+      <div class="field required">
+        <label>Content</label>
+        <textarea name="content" rows="15"></textarea>
+      </div>
+      <input type="submit" class="ui button" value="Publish">
+    </form>
+  </div>
+</div>
+
+<%- include('footer') %>
