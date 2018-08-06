@@ -93,12 +93,14 @@ module.exports = {
   },
 
   // delete post by id
-  delPostById: function delPostById (postId, author) {
-    return Post.deleteOne({ author: author, _id: postId }).exec().then(function (res) {
-      // deleted, then delete all comments in the deleted article
-      if (res.result.ok && res.result.n > 0) {
-        return CommentModel.delCommentsByPostId(postId);
-      }
-    });
+  delPostById: function delPostById (postId) {
+    return Post.deleteOne({ _id: postId })
+      .exec()
+      .then(function (res) {
+        // after delete, delete all comment
+        if (res.result.ok && res.result.n > 0) {
+          return CommentModel.delCommentsByPostId(postId);
+        }
+      });
   }
 };
