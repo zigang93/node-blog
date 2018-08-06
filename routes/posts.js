@@ -81,17 +81,83 @@ router.get('/:postId', function (req, res, next) {
 
 // GET /posts/:postId/edit , refresh article detail page
 router.get('/:postId/edit', checkLogin, function (req, res, next) {
-  res.send('Refresh Article Detail Pages');
+  const postId = req.params.postId;
+  const author = req.session.user._id;
+
+  PostModel.getRawPostById(postId)
+    .then(function (post) {
+      if (!post) {
+        throw new Error('Article not found');
+      }
+      if (author.toString() !== post.author._id.toString()) {
+        throw new Error('Permission denied');
+      }
+      res.render('edit', {
+        post: post
+      });
+    })
+    .catch(next);
 });
 
 // POST /posts/:postId/edit , update article detail page
 router.post('/:postId/edit', checkLogin, function (req, res, next) {
-  res.send('Update Article Detail Pages');
+  const postId = req.params.postId;
+  const author = req.session.user._id;
+  const title = req.fields.title;
+  const content = req.fields.content;
+
+  // 校验参数
+  try {
+    if (!title.length) {
+      throw new Error('Please write the title');
+    }
+    if (!content.length) {
+      throw new Error('Please write the content');
+    }
+  } catch (e) {
+    req.flash('error', e.message);
+    return res.redirect('back');
+  }
+
+  PostModel.getRawPostById(postId)
+    .then(function (post) {
+      if (!post) {
+        throw new Error('Article not found');
+      }
+      if (post.author._id.toString() !== author.toString()) {
+        throw new Error('No permission to do that');
+      }
+      PostModel.updatePostById(postId, { title: title, content: content })
+        .then(function () {
+          req.flash('success', 'Edit Article Success');
+          // after success edit, back to article
+          res.redirect(`/posts/${postId}`);
+        })
+        .catch(next);
+    })
 });
 
 // GET /posts/:postId/remove , remove article page
 router.get('/:postId/remove', checkLogin, function (req, res, next) {
-  res.send('Delete Article');
+  const postId = req.params.postId;
+  const author = req.session.user._id;
+
+  PostModel.getRawPostById(postId)
+    .then(function (post) {
+      if (!post) {
+        throw new Error('Article Not Found');
+      }
+      if (post.author._id.toString() !== author.toString()) {
+        throw new Error('No permission');
+      }
+      PostModel.delPostById(postId)
+        .then(function () {
+          req.flash('success', 'Delete article success');
+          // after delete, back to home
+          res.redirect('/posts');
+        })
+        .catch(next);
+    })
 });
 
 module.exports = router;

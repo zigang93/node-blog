@@ -53,5 +53,23 @@ module.exports = {
     return Post
       .update({ _id: postId }, { $inc: { pv: 1 } })
       .exec();
+  },
+
+  // get raw post by id
+  getRawPostById: function getRawPostById (postId) {
+    return Post
+      .findOne({ _id: postId })
+      .populate({ path: 'author', model: 'User' })
+      .exec();
+  },
+
+  // update post by id
+  updatePostById: function updatePostById (postId, data) {
+    return Post.update({ _id: postId }, { $set: data }).exec();
+  },
+
+  // delete post by id
+  delPostById: function delPostById (postId) {
+    return Post.deleteOne({ _id: postId }).exec();
   }
 };
