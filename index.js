@@ -32,7 +32,21 @@ app.use(session({
 // flash middleware for notification
 app.use(flash());
 
-// 路由
+// setup app locals variable
+app.locals.blog = {
+  title: pkg.name,
+  description: pkg.description
+};
+
+// setup respond variable
+app.use(function (req, res, next) {
+  res.locals.user = req.session.user;
+  res.locals.success = req.flash('success').toString();
+  res.locals.error = req.flash('error').toString();
+  next();
+});
+
+// routes
 routes(app);
 
 // listen port
