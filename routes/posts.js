@@ -6,7 +6,7 @@ const checkLogin = require('../middlewares/check').checkLogin;
 // GET /posts , all blog article from users
 //   eg: GET /posts?author=xxx
 router.get('/', function (req, res, next) {
-  res.send('Home');
+  res.render('posts');
 });
 
 // POST /posts/create , post a article
