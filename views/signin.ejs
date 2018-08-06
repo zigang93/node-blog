@@ -1,0 +1,20 @@
+<%- include('header') %>
+
+<div class="ui grid">
+  <div class="four wide column"></div>
+  <div class="eight wide column">
+    <form class="ui form segment" method="post">
+      <div class="field required">
+        <label>Username</label>
+        <input placeholder="Username" type="text" name="name">
+      </div>
+      <div class="field required">
+        <label>Password</label>
+        <input placeholder=:"Password" type="password" name="password">
+      </div>
+      <input type="submit" class="ui button fluid" value="Login">
+    </form>
+  </div>
+</div>
+
+<%- include('footer') %>
