@@ -41,8 +41,8 @@ router.post('/', checkNotLogin, function (req, res, next) {
       throw new Error('Password not match with repeated password');
     }
   } catch (e) {
-    // Sign Up fail，ayncs delete uploaded images
-    fs.unlink(req.files.avatar.path);
+    // Sign Up fail，async delete uploaded images
+    fs.unlinkSync(req.files.avatar.path);
     req.flash('error', e.message);
     return res.redirect('/signup');
   }
@@ -73,8 +73,8 @@ router.post('/', checkNotLogin, function (req, res, next) {
       res.redirect('/posts');
     })
     .catch(function (e) {
-      // Sign up fail, delete uploaded images
-      fs.unlink(req.files.avatar.path);
+      // Sign up fail, async delete uploaded images
+      fs.unlinkSync(req.files.avatar.path);
       // return to sign up page when username is exist，not return to error page.
       if (e.message.match('duplicate key')) {
         req.flash('error', 'Username had been used');
