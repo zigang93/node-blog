@@ -1,2 +1,5 @@
-node_modules/
-public/img/
+config/*
+!config/default.*
+npm-debug.log
+node_modules
+coverage
